@@ -10,7 +10,10 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import antlr.collections.List;
@@ -23,6 +26,7 @@ import tn.esprit.spring.services.EmployeServiceImpl;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
+@AutoConfigureTestDatabase(replace = Replace.NONE)
 public class EmployeRepositoryTest {
 	private static final Logger LOGGER = LoggerFactory.getLogger(EmployeServiceImpl.class);
 
@@ -36,8 +40,17 @@ public class EmployeRepositoryTest {
 	DepartementRepository repoD;
 
 	java.util.List<String> eml;
+	
+	@Test
+	@Rollback(false)
+	public void ajouterEmployerTest() {
+		Employe employe=getEmploye();
+
+		assertNotNull(employe);
+	}
 
 	@Test
+	@Rollback(false)
 	public void countempTest() {
 		LOGGER.info("{La methode countemp dans EmployeRepository retourne la valeur :  }" + " " + repo.countemp(),
 				+repo.countemp());
@@ -46,6 +59,7 @@ public class EmployeRepositoryTest {
 	}
 
 	@Test
+	@Rollback(false)
 	public void employeNamesTest() {
 		Employe employe1 = getEmploye();
 		Employe employe2 = getEmploye();
@@ -57,6 +71,7 @@ public class EmployeRepositoryTest {
 	}
 
 	@Test
+	@Rollback(false)
 	public void mettreAjourEmailByEmployeIdJPQLTest() {
 		Employe employe = getEmploye();
 
@@ -67,6 +82,7 @@ public class EmployeRepositoryTest {
 	}
 
 	@Test
+	@Rollback(false)
 	public void getSalaireByEmployeIdJPQLTest() {
 		Employe employe = getEmploye();
 		Contrat contrat = getContrat(employe);
@@ -74,9 +90,11 @@ public class EmployeRepositoryTest {
 
 		LOGGER.info("{La methode getSalaireByEmployeIdJPQL dans EmployeRepository return :   }" + " "
 				+ repo.getSalaireByEmployeIdJPQL(contrat.getEmploye().getId()));
+		assertNotNull(salaire);
 	}
 
 	@Test
+	@Rollback(false)
 	public void deleteAllContratJPQLTest() {
 		Employe employe = getEmploye();
 		Contrat contrat = getContrat(employe);
@@ -85,6 +103,7 @@ public class EmployeRepositoryTest {
 
 	}
 @Test
+@Rollback(false)
 public void getSalaireMoyenByDepartementIdTest() {
 	Departement departemen = new Departement("Informatique");
 	java.util.List<Departement> departements = new ArrayList<>();
@@ -109,8 +128,10 @@ public void getSalaireMoyenByDepartementIdTest() {
 	double d =repo.getSalaireMoyenByDepartementId(1);
 	LOGGER.info("{La methode getSalaireMoyenByDepartementId dans EmployeRepository return :  Succes }"
 			+ d);
+	assertNotNull(d);
 }
 	@Test
+	@Rollback(false)
 	public void getAllEmployeByEntreprisecTest() {
 		Employe employe1 = getEmploye();
 		Employe employe2 = getEmploye();
@@ -130,6 +151,7 @@ public void getSalaireMoyenByDepartementIdTest() {
 		repo.getAllEmployeByEntreprisec(entreprise);
 		LOGGER.info("{La methode getAllEmployeByEntreprisec dans EmployeRepository return :  Succes }"
 				+ repo.getAllEmployeByEntreprisec(entreprise).size());
+		assertNotNull(repo.getAllEmployeByEntreprisec(entreprise));
 
 	}
 
