@@ -1,6 +1,9 @@
 package tn.esprit.spring.repository;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,11 +43,11 @@ public class EmployeRepositoryTest {
 	DepartementRepository repoD;
 
 	java.util.List<String> eml;
-	
+
 	@Test
 	@Rollback(false)
 	public void ajouterEmployerTest() {
-		Employe employe=getEmploye();
+		Employe employe = getEmploye();
 
 		assertNotNull(employe);
 	}
@@ -63,22 +66,30 @@ public class EmployeRepositoryTest {
 	public void employeNamesTest() {
 		Employe employe1 = getEmploye();
 		Employe employe2 = getEmploye();
-
+java.util.List<String> names=repo.employeNames();
 		LOGGER.info("{La methode employeNames dans EmployeRepository contient :  }" + " " + repo.employeNames().size());
+for(String employe: names) {
+	System.out.println(names);
+}
+		assertThat(names.size()).isGreaterThan(0);
 
-		assertNotNull(repo.employeNames());
 
 	}
 
 	@Test
 	@Rollback(false)
 	public void mettreAjourEmailByEmployeIdJPQLTest() {
-		Employe employe = getEmploye();
+		Employe employe = new Employe("Sabeh","Kchock","sabeh@gmail.com",true,Role.CHEF_DEPARTEMENT);
+
+       repo.save(employe);
+
 
 		repo.mettreAjourEmailByEmployeIdJPQL("mohamedHedi@esprit.com", employe.getId());
 		LOGGER.info(
 				"{La methode mettreAjourEmailByEmployeIdJPQL dans EmployeRepository  : Succes  }" + employe.getEmail());
 
+
+		assertThat(employe.getEmail()).isNotSameAs("mohamedHedi@esprit.com");
 	}
 
 	@Test
@@ -98,38 +109,41 @@ public class EmployeRepositoryTest {
 	public void deleteAllContratJPQLTest() {
 		Employe employe = getEmploye();
 		Contrat contrat = getContrat(employe);
+		boolean isExistBeforeDelete=repoC.findById(contrat.getReference()).isPresent();
+
 		repo.deleteAllContratJPQL();
+		boolean notExistAfterDelete=repoC.findById(contrat.getReference()).isPresent();
 		LOGGER.info("{La methode deleteAllContratJPQL dans EmployeRepository return :  Succes }");
-
+		assertTrue(isExistBeforeDelete);
+		assertFalse(notExistAfterDelete);
 	}
-@Test
-@Rollback(false)
-public void getSalaireMoyenByDepartementIdTest() {
-	Departement departemen = new Departement("Informatique");
-	java.util.List<Departement> departements = new ArrayList<>();
-	departements.add(departemen);
-	
-	Contrat contrat1=getContrat(getEmploye());
-	Contrat contrat2=getContrat2(getEmploye());
-	Contrat contrat3=getContrat2(getEmploye());
-	
 
+	@Test
+	@Rollback(false)
+	public void getSalaireMoyenByDepartementIdTest() {
+		Departement departemen = new Departement("Informatique");
+		java.util.List<Departement> departements = new ArrayList<>();
+		repoD.save(departemen);
 
-	
-	java.util.List<Employe> employes = new ArrayList<>();
+		departements.add(departemen);
 
-	employes.add(contrat1.getEmploye());
-	employes.add(contrat2.getEmploye());
-	employes.add(contrat3.getEmploye());
-	
-	departemen.setEmployes(employes);
-	repoD.save(departemen);
-	
-	double d =repo.getSalaireMoyenByDepartementId(1);
-	LOGGER.info("{La methode getSalaireMoyenByDepartementId dans EmployeRepository return :  Succes }"
-			+ d);
-	assertNotNull(d);
-}
+		Contrat contrat1 = getContrat(getEmploye());
+		Contrat contrat2 = getContrat2(getEmploye());
+		Contrat contrat3 = getContrat2(getEmploye());
+
+		java.util.List<Employe> employes = new ArrayList<>();
+
+		employes.add(contrat1.getEmploye());
+		employes.add(contrat2.getEmploye());
+		employes.add(contrat3.getEmploye());
+
+		departemen.setEmployes(employes);
+
+		double d = repo.getSalaireMoyenByDepartementId(departemen.getId());
+		LOGGER.info("{La methode getSalaireMoyenByDepartementId dans EmployeRepository return :  Succes }" + d);
+		assertNotNull(d);
+	}
+
 	@Test
 	@Rollback(false)
 	public void getAllEmployeByEntreprisecTest() {
@@ -145,14 +159,14 @@ public void getSalaireMoyenByDepartementIdTest() {
 
 		Departement departement = new Departement("Informatique");
 		departement.setEmployes(employes);
-
+        repoD.save(departement);
 		entreprise.addDepartement(departement);
 
 		repo.getAllEmployeByEntreprisec(entreprise);
 		LOGGER.info("{La methode getAllEmployeByEntreprisec dans EmployeRepository return :  Succes }"
 				+ repo.getAllEmployeByEntreprisec(entreprise).size());
 		assertNotNull(repo.getAllEmployeByEntreprisec(entreprise));
-
+assertThat(repo.getAllEmployeByEntreprisec(entreprise).size()).isGreaterThan(0);
 	}
 
 	private Employe getEmploye() {
@@ -164,8 +178,9 @@ public void getSalaireMoyenByDepartementIdTest() {
 
 	private Entreprise getEntreprise() {
 		Entreprise entreprise = new Entreprise("Esprit", "Commercial");
-
-		entreprise.addDepartement(new Departement("Informatique"));
+		Departement departement = new Departement("Financiere");
+		repoD.save(departement);
+		entreprise.addDepartement(departement);
 		repoE.save(entreprise);
 		return entreprise;
 	}
@@ -183,6 +198,7 @@ public void getSalaireMoyenByDepartementIdTest() {
 
 		return contrat;
 	}
+
 	private Contrat getContrat2(Employe employe) {
 		Contrat contrat = new Contrat();
 		employe = getEmploye();
