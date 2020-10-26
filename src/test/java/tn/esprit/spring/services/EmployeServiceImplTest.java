@@ -25,6 +25,7 @@ import tn.esprit.spring.services.EmployeServiceImpl;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@DataJpaTest
 public class EmployeServiceImplTest {
 
 
