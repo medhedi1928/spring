@@ -9,6 +9,8 @@ import static org.junit.Assert.assertThat;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
@@ -25,8 +27,8 @@ import tn.esprit.spring.services.EmployeServiceImpl;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@DataJpaTest
 public class EmployeServiceImplTest {
+    private static final Logger LOGGER = LoggerFactory.getLogger(EmployeServiceImpl.class);
 
 
     @Autowired
@@ -45,9 +47,9 @@ public class EmployeServiceImplTest {
 	
 	private Employe getEmploye() {
 		Employe employe = new Employe();
-		employe.setNom("Sean Murphy");
-		employe.setPrenom("Delhi");
-		employe.setEmail("Mumbai");
+		employe.setNom("Med");
+		employe.setPrenom("ben khoudja");
+		employe.setEmail("med@esprit.tn");
 		employe.setActif(true);
 		employe.setRole(Role.ADMINISTRATEUR);
 		return employe;
