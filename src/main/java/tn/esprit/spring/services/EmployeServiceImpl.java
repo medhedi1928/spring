@@ -140,6 +140,7 @@ public class EmployeServiceImpl implements IEmployeService {
 	}
 	public void deleteAllContratJPQL() {
          employeRepository.deleteAllContratJPQL();
+         
 	}
 	
 	public float getSalaireByEmployeIdJPQL(int employeId) {
