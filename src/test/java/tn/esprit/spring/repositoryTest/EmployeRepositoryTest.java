@@ -1,4 +1,4 @@
-package tn.esprit.spring.repository;
+package tn.esprit.spring.repositoryTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertFalse;
@@ -25,6 +25,10 @@ import tn.esprit.spring.entities.Departement;
 import tn.esprit.spring.entities.Employe;
 import tn.esprit.spring.entities.Entreprise;
 import tn.esprit.spring.entities.Role;
+import tn.esprit.spring.repository.ContratRepository;
+import tn.esprit.spring.repository.DepartementRepository;
+import tn.esprit.spring.repository.EmployeRepository;
+import tn.esprit.spring.repository.EntrepriseRepository;
 import tn.esprit.spring.services.EmployeServiceImpl;
 
 @RunWith(SpringRunner.class)
@@ -66,28 +70,25 @@ public class EmployeRepositoryTest {
 	public void employeNamesTest() {
 		Employe employe1 = getEmploye();
 		Employe employe2 = getEmploye();
-java.util.List<String> names=repo.employeNames();
+		java.util.List<String> names = repo.employeNames();
 		LOGGER.info("{La methode employeNames dans EmployeRepository contient :  }" + " " + repo.employeNames().size());
-for(String employe: names) {
-	System.out.println(names);
-}
+		for (String employe : names) {
+			System.out.println(names);
+		}
 		assertThat(names.size()).isGreaterThan(0);
-
 
 	}
 
 	@Test
 	@Rollback(false)
 	public void mettreAjourEmailByEmployeIdJPQLTest() {
-		Employe employe = new Employe("Sabeh","Kchock","sabeh@gmail.com",true,Role.CHEF_DEPARTEMENT);
+		Employe employe = new Employe("Sabeh", "Kchock", "sabeh@gmail.com", true, Role.CHEF_DEPARTEMENT);
 
-       repo.save(employe);
-
+		repo.save(employe);
 
 		repo.mettreAjourEmailByEmployeIdJPQL("mohamedHedi@esprit.com", employe.getId());
 		LOGGER.info(
 				"{La methode mettreAjourEmailByEmployeIdJPQL dans EmployeRepository  : Succes  }" + employe.getEmail());
-
 
 		assertThat(employe.getEmail()).isNotSameAs("mohamedHedi@esprit.com");
 	}
@@ -109,12 +110,13 @@ for(String employe: names) {
 	public void deleteAllContratJPQLTest() {
 		Employe employe = getEmploye();
 		Contrat contrat = getContrat(employe);
-		boolean isExistBeforeDelete=repoC.findById(contrat.getReference()).isPresent();
+		// boolean
+		// isExistBeforeDelete=repoC.findById(contrat.getReference()).isPresent();
 
 		repo.deleteAllContratJPQL();
-		boolean notExistAfterDelete=repoC.findById(contrat.getReference()).isPresent();
+		boolean notExistAfterDelete = repoC.findById(contrat.getReference()).isPresent();
 		LOGGER.info("{La methode deleteAllContratJPQL dans EmployeRepository return :  Succes }");
-		assertTrue(isExistBeforeDelete);
+		// assertTrue(isExistBeforeDelete);
 		assertFalse(notExistAfterDelete);
 	}
 
@@ -159,14 +161,14 @@ for(String employe: names) {
 
 		Departement departement = new Departement("Informatique");
 		departement.setEmployes(employes);
-        repoD.save(departement);
+		repoD.save(departement);
 		entreprise.addDepartement(departement);
 
 		repo.getAllEmployeByEntreprisec(entreprise);
 		LOGGER.info("{La methode getAllEmployeByEntreprisec dans EmployeRepository return :  Succes }"
 				+ repo.getAllEmployeByEntreprisec(entreprise).size());
 		assertNotNull(repo.getAllEmployeByEntreprisec(entreprise));
-assertThat(repo.getAllEmployeByEntreprisec(entreprise).size()).isGreaterThan(0);
+		assertThat(repo.getAllEmployeByEntreprisec(entreprise).size()).isGreaterThan(0);
 	}
 
 	private Employe getEmploye() {

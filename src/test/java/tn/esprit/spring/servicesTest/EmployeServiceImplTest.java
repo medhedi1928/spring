@@ -1,4 +1,4 @@
-package tn.esprit.spring.services;
+package tn.esprit.spring.servicesTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNullPointerException;
@@ -11,11 +11,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.hamcrest.core.IsNot;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
@@ -42,7 +43,7 @@ import tn.esprit.spring.services.EmployeServiceImpl;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class EmployeServiceImplTest {
-	private static final Logger LOGGER = LoggerFactory.getLogger(EmployeServiceImpl.class);
+
 
 	@Autowired
 	EmployeServiceImpl controller;
@@ -65,10 +66,11 @@ public class EmployeServiceImplTest {
 				Role.ADMINISTRATEUR);
 
 		int i = controller.ajouterEmploye(employe);
-		System.out.println(i);
-		LOGGER.info("{La methode ajouterEmploye dans EmployeServiceImpl  : succes  }" + " " + i);
 
-		assertNotNull(i);
+assertThat(i).isNotNegative();
+
+
+
 	}
 
 	@Test
@@ -77,7 +79,7 @@ public class EmployeServiceImplTest {
 				Role.ADMINISTRATEUR);
 		controller.ajouterEmploye(employe);
 		controller.mettreAjourEmailByEmployeId("kawthaar.benkhoudja@gmail.com", employe.getId());
-		LOGGER.info("{La methode mettreAjourEmailByEmployeIdJPQL dans EmployeServiceImpl  : Succes  }");
+
 
 		assertThat(employe.getEmail()).isNotSameAs("kawthaar.benkhoudja@gmail.com");
 	}
@@ -91,7 +93,7 @@ public class EmployeServiceImplTest {
 		Departement departement = new Departement("R.H");
 		deptRepoistory.save(departement);
 		controller.affecterEmployeADepartement(employe.getId(), departement.getId());
-		LOGGER.info("{La methode affecterEmployeADepartement dans EmployeServiceImpl  :  Succes }");
+
 		assertNotNull(deptRepoistory.findById(departement.getId()));
 
 	}
@@ -104,7 +106,7 @@ public class EmployeServiceImplTest {
 		Departement departement = new Departement("R.D");
 		deptRepoistory.save(departement);
 		controller.desaffecterEmployeDuDepartement(employe.getId(), departement.getId());
-		LOGGER.info("{La methode desaffecterEmployeDuDepartement dans EmployeServiceImpl  :  Succes }");
+
 
 	}
 
@@ -125,7 +127,7 @@ public class EmployeServiceImplTest {
 		controller.ajouterContrat(contrat);
 		assertNotNull(contrat);
 		controller.deleteContratById(contrat.getReference());
-		LOGGER.info("{La methode deleteContratById dans EmployeServiceImpl  :  Succes }");
+
 
 	}
 
@@ -134,7 +136,7 @@ public class EmployeServiceImplTest {
 		Contrat contrat = new Contrat(new Date(), "CDI", 1500);
 		controller.ajouterContrat(contrat);
 		assertNotNull(contrat);
-		LOGGER.info("{La methode ajouterContrat dans EmployeServiceImpl  :  Succes }");
+
 
 	}
 
@@ -146,7 +148,7 @@ public class EmployeServiceImplTest {
 				Role.ADMINISTRATEUR);
 		controller.ajouterEmploye(employe);
 		controller.affecterContratAEmploye(contrat.getReference(), employe.getId());
-		LOGGER.info("{La methode affecterContratAEmploye dans EmployeServiceImpl  :  Succes }");
+
 
 	}
 
@@ -156,7 +158,7 @@ public class EmployeServiceImplTest {
 		controller.ajouterEmploye(employe);
 
 		String name = controller.getEmployePrenomById(employe.getId());
-		LOGGER.info("{La methode getEmployePrenomById dans EmployeServiceImpl  :  Succes }");
+
 		assertThat(name).isEqualTo(employe.getPrenom());
 	}
 
@@ -164,28 +166,31 @@ public class EmployeServiceImplTest {
 	public void getNombreEmployeJPQLTest() {
 		int i = controller.getNombreEmployeJPQL();
 		assertNotNull(i);
-		LOGGER.info("{La methode getNombreEmployeJPQL dans EmployeServiceImpl  :  Succes }");
+
 
 	}
 
 	@Test
 	public void getAllEmployeNamesJPQLTest() {
+		Employe employe = new Employe("Khalil", "SEKMA", "Khalil.SEKMA@esprit.tn", true, Role.ADMINISTRATEUR);
+		controller.ajouterEmploye(employe);
+
 		java.util.List<String> names = controller.getAllEmployeNamesJPQL();
-		for (String employe : names) {
-			System.out.println(names);
-		}
+		//for (String employe : names) {
+			//System.out.println(names);
+		//}
 		assertThat(names.size()).isGreaterThan(0);
-		LOGGER.info("{La methode getAllEmployeNamesJPQL dans EmployeServiceImpl  :  Succes }");
+
 	}
 
 	@Test
 	public void getAllEmployesTest() {
 		java.util.List<Employe> employes = controller.getAllEmployes();
 		for (Employe employe : employes) {
-			System.out.println(employe.getId());
+
 		}
 		assertThat(employes.size()).isGreaterThan(0);
-		LOGGER.info("{La methode getAllEmployes dans EmployeServiceImpl  :  Succes }");
+
 
 	}
 
@@ -221,7 +226,7 @@ public class EmployeServiceImplTest {
 		deptRepoistory.save(departemen);
 
 		double d = controller.getSalaireMoyenByDepartementId(departemen.getId());
-		LOGGER.info("{La methode getSalaireMoyenByDepartementId dans EmployeServiceImpl return :  Succes }" + d);
+
 		assertNotNull(d);
 	}
 
@@ -233,7 +238,7 @@ public class EmployeServiceImplTest {
 		contrat.setEmploye(employe);
 		controller.ajouterContrat(contrat);
 		float salaire = controller.getSalaireByEmployeIdJPQL(employe.getId());
-		LOGGER.info("{La methode getSalaireByEmployeIdJPQL dans EmployeRepository return :   }" + " " + salaire);
+
 		assertNotNull(salaire);
 	}
 
@@ -243,7 +248,7 @@ public class EmployeServiceImplTest {
 		controller.ajouterContrat(contrat);
 		controller.deleteAllContratJPQL();
 		boolean notExistAfterDelete = contratRepoistory.findById(contrat.getReference()).isPresent();
-		LOGGER.info("{La methode deleteAllContratJPQL dans EmployeRepository return :  Succes }");
+
 		assertFalse(notExistAfterDelete);
 
 	}
@@ -285,10 +290,10 @@ public class EmployeServiceImplTest {
 		controller.getAllEmployeByEntreprise(entreprise);
 		java.util.List<Employe> Entreprise_employe = controller.getAllEmployeByEntreprise(entreprise);
 		for (Employe Eemploye : Entreprise_employe) {
-			System.out.println(Eemploye.getId());
+
 		}
 		assertThat(Entreprise_employe.size()).isGreaterThan(0);
-		LOGGER.info("{La methode getAllEmployes dans EmployeServiceImpl  :  Succes }" + Entreprise_employe.size());
+
 
 	}
 
@@ -299,8 +304,8 @@ public class EmployeServiceImplTest {
 		controller.mettreAjourEmailByEmployeIdJPQL("sawsen@esprit.com", employe.getId());
 		Employe employeManagedEntity = employeRepository.findById(employe.getId()).get();
 
-		LOGGER.info("{La methode mettreAjourEmailByEmployeIdJPQL dans EmployeRepository  : Succes  }"
-				+ employeManagedEntity.getEmail());
+
+
 
 		assertThat(employe.getEmail()).isNotSameAs(employeManagedEntity.getEmail());
 
@@ -342,8 +347,8 @@ public class EmployeServiceImplTest {
 				new Date(), new Date(2020 - 12 - 27));
 
 		assertThat(timesheets_Res.size()).isGreaterThan(0);
-		LOGGER.info("{La methode getTimesheetsByMissionAndDate dans EmployeServiceImpl  :  Succes }"
-				+ timesheets_Res.size());
+
+
 
 	}
 }
