@@ -4,19 +4,19 @@ import java.util.Date;
 import java.util.List;
 
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
+
 
 import tn.esprit.spring.entities.Contrat;
 import tn.esprit.spring.entities.Employe;
 import tn.esprit.spring.entities.Entreprise;
 import tn.esprit.spring.entities.Mission;
 import tn.esprit.spring.entities.Timesheet;
-import tn.esprit.spring.services.EmployeServiceImpl;
+
 import tn.esprit.spring.services.IEmployeService;
 import tn.esprit.spring.services.IEntrepriseService;
 import tn.esprit.spring.services.ITimesheetService;
@@ -128,13 +128,13 @@ public class IControllerEmployeImpl  {
 
 	
 	public float getSalaireByEmployeIdJPQL(int employeId) {
-		// TODO Auto-generated method stub
+
 		return iemployeservice.getSalaireByEmployeIdJPQL(employeId);
 	}
 
 
 	public Double getSalaireMoyenByDepartementId(int departementId) {
-		// TODO Auto-generated method stub
+
 		return iemployeservice.getSalaireMoyenByDepartementId(departementId);
 	}
 

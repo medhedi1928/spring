@@ -169,7 +169,7 @@ public class EmployeServiceImplTest {
 		// for (String employe : names) {
 		// System.out.println(names);
 		// }
-		assertThat(names.size()).isGreaterThan(0);
+		assertThat(names.size()).isPositive();
 
 	}
 
@@ -179,7 +179,7 @@ public class EmployeServiceImplTest {
 		for (Employe employe : employes) {
 
 		}
-		assertThat(employes.size()).isGreaterThan(0);
+		assertThat(employes.size()).isPositive();
 
 	}
 
@@ -281,7 +281,7 @@ public class EmployeServiceImplTest {
 		for (Employe Eemploye : Entreprise_employe) {
 
 		}
-		assertThat(Entreprise_employe.size()).isGreaterThan(0);
+		assertThat(Entreprise_employe.size()).isPositive();
 
 	}
 

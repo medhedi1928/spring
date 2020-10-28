@@ -75,7 +75,7 @@ public class EmployeRepositoryTest {
 		for (String employe : names) {
 			System.out.println(names);
 		}
-		assertThat(names.size()).isGreaterThan(0);
+		assertThat(names.size()).isPositive();
 
 	}
 
@@ -168,7 +168,7 @@ public class EmployeRepositoryTest {
 		LOGGER.info("{La methode getAllEmployeByEntreprisec dans EmployeRepository return :  Succes }"
 				+ repo.getAllEmployeByEntreprisec(entreprise).size());
 		assertNotNull(repo.getAllEmployeByEntreprisec(entreprise));
-		assertThat(repo.getAllEmployeByEntreprisec(entreprise).size()).isGreaterThan(0);
+		assertThat(repo.getAllEmployeByEntreprisec(entreprise).size()).isPositive();
 	}
 
 	private Employe getEmploye() {

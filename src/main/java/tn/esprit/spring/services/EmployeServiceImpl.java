@@ -44,7 +44,7 @@ public class EmployeServiceImpl implements IEmployeService {
 			return employeManagedEntity.getId();
 
 		} catch (Exception e) {
-			// TODO: handle exception
+
 			LOGGER.error("Erreur methode ajouterEmploye =>" + " " );
 			return -1;
 		}
@@ -135,7 +135,7 @@ public class EmployeServiceImpl implements IEmployeService {
 			contratRepoistory.save(contratManagedEntity);
 		} catch (Exception e) {
 			LOGGER.error("Erreur methode affecterContratAEmploye =>" + " " + e.getMessage());
-			// TODO: handle exception
+
 		}
 
 	}
@@ -148,7 +148,6 @@ public class EmployeServiceImpl implements IEmployeService {
 			return employeManagedEntity.getPrenom();
 		} catch (Exception e) {
 			LOGGER.error("Erreur methode getEmployePrenomById =>" + " " + e.getMessage());
-			// TODO: handle exception
 			return e.getMessage();
 		}
 
@@ -257,9 +256,9 @@ public class EmployeServiceImpl implements IEmployeService {
 			return employeRepository.getSalaireByEmployeIdJPQL(employeId);
 
 		} catch (Exception e) {
-			// TODO: handle exception
+
 			LOGGER.error("Erreur methode getSalaireByEmployeIdJPQL =>" + " " + e.getMessage());
-			return (Float) null;// TODO: handle exception
+			return (Float) null;
 		}
 	}
 
@@ -273,7 +272,7 @@ public class EmployeServiceImpl implements IEmployeService {
 
 		} catch (Exception e) {
 			LOGGER.error("Erreur methode getSalaireMoyenByDepartementId =>" + " " + e.getMessage());
-			return i;// TODO: handle exception
+			return i;
 		}
 	}
 
@@ -286,7 +285,7 @@ public class EmployeServiceImpl implements IEmployeService {
 
 		} catch (Exception e) {
 			LOGGER.error("Erreur methode getTimesheetsByMissionAndDate =>" + " " + e.getMessage());
-			return null;// TODO: handle exception
+			return null;
 		}
 	}
 
@@ -298,7 +297,7 @@ public class EmployeServiceImpl implements IEmployeService {
 
 		} catch (Exception e) {
 			LOGGER.error("Erreur methode getAllEmployes =>" + " " + e.getMessage());
-			return null;// TODO: handle exception
+			return null;
 		}
 	}
 
