@@ -39,7 +39,9 @@ public class EmployeServiceImpl implements IEmployeService {
 	public int ajouterEmploye(Employe employe) {
 		try {
 			LOGGER.info("{Save succes}", employeRepository.save(employe));
-			return employe.getId();
+			Employe employeManagedEntity = employeRepository.findById(employe.getId()).get();
+
+			return employeManagedEntity.getId();
 
 		} catch (Exception e) {
 			// TODO: handle exception

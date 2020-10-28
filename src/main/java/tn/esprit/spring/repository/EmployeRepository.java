@@ -34,7 +34,7 @@ public interface EmployeRepository extends CrudRepository<Employe, Integer>  {
     @Modifying
     @Transactional
     @Query("UPDATE Employe e SET e.email=:email1 where e.id=:employeId")
-    public void mettreAjourEmailByEmployeIdJPQL(@Param("email1")String email, @Param("employeId")int employeId);
+	public void mettreAjourEmailByEmployeIdJPQL(@Param("email1") String email, @Param("employeId") int employeId);
 
     
     @Modifying

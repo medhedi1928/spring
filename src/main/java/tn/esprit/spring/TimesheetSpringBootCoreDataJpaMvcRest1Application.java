@@ -18,17 +18,11 @@ import tn.esprit.spring.services.EmployeServiceImpl;
 @Component
 public class TimesheetSpringBootCoreDataJpaMvcRest1Application {
 	@Autowired
-	static
-	EmployeServiceImpl controller;
-
+	static EmployeServiceImpl controller;
 
 	public static void main(String[] args) {
 		SpringApplication.run(TimesheetSpringBootCoreDataJpaMvcRest1Application.class, args);
 
-
 	}
-	
-	
-
 
 }

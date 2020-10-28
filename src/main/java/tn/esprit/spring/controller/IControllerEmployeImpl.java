@@ -29,7 +29,7 @@ public class IControllerEmployeImpl  {
 
 
 	
-
+	@Autowired
 	IEmployeService iemployeservice;
 	@Autowired
 	IEntrepriseService ientrepriseservice;

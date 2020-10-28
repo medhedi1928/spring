@@ -16,7 +16,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
@@ -44,7 +43,6 @@ import tn.esprit.spring.services.EmployeServiceImpl;
 @SpringBootTest
 public class EmployeServiceImplTest {
 
-
 	@Autowired
 	EmployeServiceImpl controller;
 	@Autowired
@@ -67,9 +65,7 @@ public class EmployeServiceImplTest {
 
 		int i = controller.ajouterEmploye(employe);
 
-assertThat(i).isNotNegative();
-
-
+		assertThat(i).isNotNegative();
 
 	}
 
@@ -79,7 +75,6 @@ assertThat(i).isNotNegative();
 				Role.ADMINISTRATEUR);
 		controller.ajouterEmploye(employe);
 		controller.mettreAjourEmailByEmployeId("kawthaar.benkhoudja@gmail.com", employe.getId());
-
 
 		assertThat(employe.getEmail()).isNotSameAs("kawthaar.benkhoudja@gmail.com");
 	}
@@ -107,7 +102,6 @@ assertThat(i).isNotNegative();
 		deptRepoistory.save(departement);
 		controller.desaffecterEmployeDuDepartement(employe.getId(), departement.getId());
 
-
 	}
 
 	@Test
@@ -128,7 +122,6 @@ assertThat(i).isNotNegative();
 		assertNotNull(contrat);
 		controller.deleteContratById(contrat.getReference());
 
-
 	}
 
 	@Test
@@ -136,7 +129,6 @@ assertThat(i).isNotNegative();
 		Contrat contrat = new Contrat(new Date(), "CDI", 1500);
 		controller.ajouterContrat(contrat);
 		assertNotNull(contrat);
-
 
 	}
 
@@ -148,7 +140,6 @@ assertThat(i).isNotNegative();
 				Role.ADMINISTRATEUR);
 		controller.ajouterEmploye(employe);
 		controller.affecterContratAEmploye(contrat.getReference(), employe.getId());
-
 
 	}
 
@@ -167,7 +158,6 @@ assertThat(i).isNotNegative();
 		int i = controller.getNombreEmployeJPQL();
 		assertNotNull(i);
 
-
 	}
 
 	@Test
@@ -176,9 +166,9 @@ assertThat(i).isNotNegative();
 		controller.ajouterEmploye(employe);
 
 		java.util.List<String> names = controller.getAllEmployeNamesJPQL();
-		//for (String employe : names) {
-			//System.out.println(names);
-		//}
+		// for (String employe : names) {
+		// System.out.println(names);
+		// }
 		assertThat(names.size()).isGreaterThan(0);
 
 	}
@@ -190,7 +180,6 @@ assertThat(i).isNotNegative();
 
 		}
 		assertThat(employes.size()).isGreaterThan(0);
-
 
 	}
 
@@ -294,7 +283,6 @@ assertThat(i).isNotNegative();
 		}
 		assertThat(Entreprise_employe.size()).isGreaterThan(0);
 
-
 	}
 
 	@Test
@@ -303,9 +291,6 @@ assertThat(i).isNotNegative();
 		controller.ajouterEmploye(employe);
 		controller.mettreAjourEmailByEmployeIdJPQL("sawsen@esprit.com", employe.getId());
 		Employe employeManagedEntity = employeRepository.findById(employe.getId()).get();
-
-
-
 
 		assertThat(employe.getEmail()).isNotSameAs(employeManagedEntity.getEmail());
 
@@ -347,8 +332,6 @@ assertThat(i).isNotNegative();
 				new Date(), new Date(2020 - 12 - 27));
 
 		assertThat(timesheets_Res.size()).isGreaterThan(0);
-
-
 
 	}
 }
