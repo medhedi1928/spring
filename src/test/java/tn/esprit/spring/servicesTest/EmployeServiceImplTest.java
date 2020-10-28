@@ -1,25 +1,19 @@
 package tn.esprit.spring.servicesTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatNullPointerException;
-import static org.junit.Assert.assertEquals;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.hamcrest.core.IsNot;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -39,8 +33,14 @@ import tn.esprit.spring.repository.MissionRepository;
 import tn.esprit.spring.repository.TimesheetRepository;
 import tn.esprit.spring.services.EmployeServiceImpl;
 
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
+/*
+ * @SpringBootTest
+ * Annotation qui peut être spécifiée sur une classe de test qui exécute des
+ * tests basés sur Spring Boot.
+ */
 public class EmployeServiceImplTest {
 
 	@Autowired
