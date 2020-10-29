@@ -15,14 +15,13 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+
 
 
 
 
 @Entity
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Employe implements Serializable {
 	
 	public Employe(int id, String prenom, String nom, String email, boolean isActif, Role role) {
@@ -39,33 +38,32 @@ public class Employe implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@JsonIgnore
 	private int id;
-	@JsonIgnore
+	
 	private String prenom;
-	@JsonIgnore
+	
 	private String nom;
-	@JsonIgnore
+	
 	//@Column(unique=true)
 	private String email;
-	@JsonIgnore
+
 	private boolean isActif;
-	@JsonIgnore
+	
 	@Enumerated(EnumType.STRING)
 	//@NotNull
 	private Role role;
-	@JsonIgnore
+	
 	//@JsonBackReference  
 	@ManyToMany(mappedBy="employes",fetch=FetchType.EAGER )
 	//@NotNull
 	private List<Departement> departements;
 	
-	@JsonIgnore
+
 	//@JsonBackReference
 	@OneToOne(mappedBy="employe")
 	private Contrat contrat;
 	
-	@JsonIgnore
+
 	//@JsonBackReference
 	@OneToMany(mappedBy="employe")
 	private List<Timesheet> timesheets;
@@ -121,12 +119,6 @@ public class Employe implements Serializable {
 
 	public void setActif(boolean isActif) {
 		this.isActif = isActif;
-	}
-
-	@Override
-	public String toString() {
-		return "Employe [id=" + id + ", prenom=" + prenom + ", nom=" + nom + ", email=" + email + ", isActif=" + isActif
-				+ ", role=" + role + "]";
 	}
 
 	public Role getRole() {

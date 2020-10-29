@@ -54,22 +54,15 @@ public class EmployeServiceImpl implements IEmployeService {
 	public void mettreAjourEmailByEmployeId(String email, int employeId) {
 		Employe employe = employeRepository.findById(employeId).orElse(null);
 
-		try {
-			LOGGER.info("{mettre A jour Email By EmployeId}");
 
-			if (employe != null) {
+
+			if (employe != null && email!=null ) {
 				employe.setEmail(email);
 				employeRepository.save(employe);
 				LOGGER.debug("{Email changer}");
 			} else {
 				LOGGER.error("Erreur methode mettreAjourEmailByEmployeId :NullPointerException" );
-
-			}
-
-		} catch (Exception e) {
-
-			LOGGER.error("Erreur methode mettreAjourEmailByEmployeId : {}", e.getMessage());
-		}
+				}
 
 	}
 
