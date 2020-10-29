@@ -3,7 +3,6 @@ package tn.esprit.spring.repositoryTest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,7 +18,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import antlr.collections.List;
 import tn.esprit.spring.entities.Contrat;
 import tn.esprit.spring.entities.Departement;
 import tn.esprit.spring.entities.Employe;
@@ -62,19 +60,15 @@ public class EmployeRepositoryTest {
 		LOGGER.info("{La methode countemp dans EmployeRepository retourne la valeur :  }" + " " + repo.countemp(),
 				+repo.countemp());
 
-		assertNotNull(repo.countemp());
+		assertThat(repo.countemp()).isPositive().isNotZero();
+
 	}
 
 	@Test
 	@Rollback(false)
 	public void employeNamesTest() {
-		Employe employe1 = getEmploye();
-		Employe employe2 = getEmploye();
 		java.util.List<String> names = repo.employeNames();
 		LOGGER.info("{La methode employeNames dans EmployeRepository contient :  }" + " " + repo.employeNames().size());
-		for (String employe : names) {
-			System.out.println(names);
-		}
 		assertThat(names.size()).isPositive();
 
 	}
@@ -102,7 +96,9 @@ public class EmployeRepositoryTest {
 
 		LOGGER.info("{La methode getSalaireByEmployeIdJPQL dans EmployeRepository return :   }" + " "
 				+ repo.getSalaireByEmployeIdJPQL(contrat.getEmploye().getId()));
-		assertNotNull(salaire);
+		// assertNotNull(salaire);
+		assertThat(salaire).isPositive().isNotZero();
+
 	}
 
 	@Test
@@ -143,7 +139,8 @@ public class EmployeRepositoryTest {
 
 		double d = repo.getSalaireMoyenByDepartementId(departemen.getId());
 		LOGGER.info("{La methode getSalaireMoyenByDepartementId dans EmployeRepository return :  Succes }" + d);
-		assertNotNull(d);
+
+		assertThat(d).isPositive().isNotZero();
 	}
 
 	@Test

@@ -11,12 +11,14 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 
 
 
 
 @Entity
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Departement implements Serializable {
 
 	private static final long serialVersionUID = -357738161698377833L;
@@ -28,7 +30,7 @@ public class Departement implements Serializable {
 	private String name;
 	
 	//@JsonManagedReference 
-	@JsonIgnore
+
 	@ManyToMany
 	private List<Employe> employes;
 	

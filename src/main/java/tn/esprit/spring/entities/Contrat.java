@@ -11,7 +11,9 @@ import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Contrat implements Serializable {
 	
 	private static final long serialVersionUID = 6191889143079517027L;

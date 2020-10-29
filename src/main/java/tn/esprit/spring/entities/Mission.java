@@ -10,7 +10,9 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Mission implements Serializable {
 
 	private static final long serialVersionUID = -5369734855993305723L;

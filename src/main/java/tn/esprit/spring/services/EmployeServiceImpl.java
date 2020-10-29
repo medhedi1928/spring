@@ -3,14 +3,12 @@ package tn.esprit.spring.services;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import tn.esprit.spring.entities.Contrat;
 import tn.esprit.spring.entities.Departement;
 import tn.esprit.spring.entities.Employe;
@@ -37,30 +35,40 @@ public class EmployeServiceImpl implements IEmployeService {
 	TimesheetRepository timesheetRepository;
 
 	public int ajouterEmploye(Employe employe) {
-		try {
-			LOGGER.info("{Save succes}", employeRepository.save(employe));
-			Employe employeManagedEntity = employeRepository.findById(employe.getId()).get();
+		employeRepository.save(employe);
+
+		Employe employeManagedEntity = employeRepository.findById(employe.getId()).orElse(null);
+		if (employeManagedEntity != null) {
+
+			LOGGER.info("ajouter Employe avec succes {}", employeManagedEntity.getId());
 
 			return employeManagedEntity.getId();
 
-		} catch (Exception e) {
-
-			LOGGER.error("Erreur methode ajouterEmploye =>" + " " );
+		} else {
+			LOGGER.error("Erreur methode ajouterEmploye NullPointerException");
 			return -1;
 		}
 
 	}
 
 	public void mettreAjourEmailByEmployeId(String email, int employeId) {
+		Employe employe = employeRepository.findById(employeId).orElse(null);
+
 		try {
 			LOGGER.info("{mettre A jour Email By EmployeId}");
 
-			Employe employe = employeRepository.findById(employeId).get();
-			employe.setEmail(email);
-			LOGGER.debug("{Email changer}");
+			if (employe != null) {
+				employe.setEmail(email);
+				employeRepository.save(employe);
+				LOGGER.debug("{Email changer}");
+			} else {
+				LOGGER.error("Erreur methode mettreAjourEmailByEmployeId :NullPointerException" );
+
+			}
 
 		} catch (Exception e) {
-			LOGGER.error("Erreur methode mettreAjourEmailByEmployeId=>" + e.getMessage());
+
+			LOGGER.error("Erreur methode mettreAjourEmailByEmployeId : {}", e.getMessage());
 		}
 
 	}
@@ -70,22 +78,24 @@ public class EmployeServiceImpl implements IEmployeService {
 		try {
 			LOGGER.info("{affecter Employe A Departement}");
 
-			Departement depManagedEntity = deptRepoistory.findById(depId).get();
-			Employe employeManagedEntity = employeRepository.findById(employeId).get();
+			Departement depManagedEntity = deptRepoistory.findById(depId).orElse(null);
+			Employe employeManagedEntity = employeRepository.findById(employeId).orElse(null);
+			if (depManagedEntity != null && employeManagedEntity != null) {
+				if (depManagedEntity.getEmployes() == null) {
 
-			if (depManagedEntity.getEmployes() == null) {
+					List<Employe> employes = new ArrayList<>();
+					employes.add(employeManagedEntity);
+					depManagedEntity.setEmployes(employes);
+				} else {
 
-				List<Employe> employes = new ArrayList<>();
-				employes.add(employeManagedEntity);
-				depManagedEntity.setEmployes(employes);
-			} else {
+					depManagedEntity.getEmployes().add(employeManagedEntity);
+					LOGGER.debug("{Email changer}");
 
-				depManagedEntity.getEmployes().add(employeManagedEntity);
-				LOGGER.debug("{Email changer}");
-
+				}
 			}
+
 		} catch (Exception e) {
-			LOGGER.error("Erreur methode affecterEmployeADepartement=>" + " " + e.getMessage());
+			LOGGER.error("Erreur methode affecterEmployeADepartement {}", e.getMessage());
 		}
 
 	}
@@ -93,19 +103,22 @@ public class EmployeServiceImpl implements IEmployeService {
 	@Transactional
 	public void desaffecterEmployeDuDepartement(int employeId, int depId) {
 		try {
-			LOGGER.info("{desaffecter Employe Du Departement}");
 
-			Departement dep = deptRepoistory.findById(depId).get();
+			Departement dep = deptRepoistory.findById(depId).orElse(null);
+			if (dep != null) {
+				int employeNb = dep.getEmployes().size();
+				for (int index = 0; index < employeNb; index++) {
+					if (dep.getEmployes().get(index).getId() == employeId) {
+						dep.getEmployes().remove(index);
+						LOGGER.info("{desaffecter Employe Du Departement}");
 
-			int employeNb = dep.getEmployes().size();
-			for (int index = 0; index < employeNb; index++) {
-				if (dep.getEmployes().get(index).getId() == employeId) {
-					dep.getEmployes().remove(index);
-					break;// a revoir
+						break;// a revoir
+					}
 				}
+
 			}
 		} catch (Exception e) {
-			LOGGER.error("Erreur methode desaffecterEmployeDuDepartement =>" + " " + e.getMessage());
+			LOGGER.error("Erreur methode desaffecterEmployeDuDepartement {}", e.getMessage());
 		}
 
 	}
@@ -117,7 +130,7 @@ public class EmployeServiceImpl implements IEmployeService {
 			contratRepoistory.save(contrat);
 			return contrat.getReference();
 		} catch (Exception e) {
-			LOGGER.error("Erreur methode ajouterContrat=>" + " " + e.getMessage());
+			LOGGER.error("Erreur methode ajouterContrat {}", e.getMessage());
 
 			return 0;
 		}
@@ -128,13 +141,16 @@ public class EmployeServiceImpl implements IEmployeService {
 		try {
 			LOGGER.info("{affecter Contrat A Employe}");
 
-			Contrat contratManagedEntity = contratRepoistory.findById(contratId).get();
-			Employe employeManagedEntity = employeRepository.findById(employeId).get();
+			Contrat contratManagedEntity = contratRepoistory.findById(contratId).orElse(null);
+			Employe employeManagedEntity = employeRepository.findById(employeId).orElse(null);
+			if (contratManagedEntity != null && employeManagedEntity != null) {
 
-			contratManagedEntity.setEmploye(employeManagedEntity);
-			contratRepoistory.save(contratManagedEntity);
+				contratManagedEntity.setEmploye(employeManagedEntity);
+				contratRepoistory.save(contratManagedEntity);
+			}
+
 		} catch (Exception e) {
-			LOGGER.error("Erreur methode affecterContratAEmploye =>" + " " + e.getMessage());
+			LOGGER.error("Erreur methode affecterContratAEmploye {}", e.getMessage());
 
 		}
 
@@ -144,10 +160,17 @@ public class EmployeServiceImpl implements IEmployeService {
 		try {
 			LOGGER.info("{get Employe Prenom ById}");
 
-			Employe employeManagedEntity = employeRepository.findById(employeId).get();
-			return employeManagedEntity.getPrenom();
+			Employe employeManagedEntity = employeRepository.findById(employeId).orElse(null);
+			if (employeManagedEntity != null) {
+				return employeManagedEntity.getPrenom();
+
+			} else {
+				LOGGER.error("Erreur methode getEmployePrenomById :NullPointerException");
+
+				return null;
+			}
 		} catch (Exception e) {
-			LOGGER.error("Erreur methode getEmployePrenomById =>" + " " + e.getMessage());
+			LOGGER.error("Erreur methode getEmployePrenomById {}", e.getMessage());
 			return e.getMessage();
 		}
 
@@ -157,30 +180,38 @@ public class EmployeServiceImpl implements IEmployeService {
 		try {
 			LOGGER.info("{delete Employe ById}");
 
-			Employe employe = employeRepository.findById(employeId).get();
+			Employe employe = employeRepository.findById(employeId).orElse(null);
+			if (employe != null) {
+				// Desaffecter l'employe de tous les departements
+				// c'est le bout master qui permet de mettre a jour
+				// la table d'association
+				for (Departement dep : employe.getDepartements()) {
+					dep.getEmployes().remove(employe);
+				}
 
-			// Desaffecter l'employe de tous les departements
-			// c'est le bout master qui permet de mettre a jour
-			// la table d'association
-			for (Departement dep : employe.getDepartements()) {
-				dep.getEmployes().remove(employe);
+				employeRepository.delete(employe);
+			} else {
+				LOGGER.error("Erreur methode deleteEmployeById :NullPointerException");
+
 			}
 
-			employeRepository.delete(employe);
 		} catch (Exception e) {
-			LOGGER.error("Erreur methode deleteEmployeById =>" + " " + e.getMessage());
+			LOGGER.error("Erreur methode deleteEmployeById {}", e.getMessage());
 		}
 
 	}
 
 	public void deleteContratById(int contratId) {
-		try {
-			LOGGER.info("{delete Contrat ById}");
 
-			Contrat contratManagedEntity = contratRepoistory.findById(contratId).get();
+		LOGGER.info("{delete Contrat ById}");
+
+		Contrat contratManagedEntity = contratRepoistory.findById(contratId).orElse(null);
+		if (contratManagedEntity != null) {
 			contratRepoistory.delete(contratManagedEntity);
-		} catch (Exception e) {
-			LOGGER.error("Erreur methode deleteContratById =>" + " " + e.getMessage());
+
+		} else {
+			LOGGER.error("Erreur methode deleteContratById :NullPointerException");
+
 		}
 
 	}
@@ -192,23 +223,21 @@ public class EmployeServiceImpl implements IEmployeService {
 			return employeRepository.countemp();
 
 		} catch (Exception e) {
-			LOGGER.error("Erreur methode getNombreEmployeJPQL =>" + " " + e.getMessage());
+			LOGGER.error("Erreur methode getNombreEmployeJPQL {}", e.getMessage());
 			return -1;
 		}
 	}
 
 	public List<String> getAllEmployeNamesJPQL() {
-		List<String>employes=new ArrayList<String>();
-		employes= employeRepository.employeNames();
+
+		List<String> employes = employeRepository.employeNames();
 		LOGGER.info("{get All Employe Names JPQL}");
 
-		if(employes.isEmpty()) {
-			LOGGER.error("Erreur methode getAllEmployeNamesJPQL return vide" );
-			return null;
-		}else
+		if (employes.isEmpty()) {
+			LOGGER.error("Erreur methode getAllEmployeNamesJPQL return vide");
+			return new ArrayList<>();
+		} else
 			return employes;
-
-
 
 	}
 
@@ -219,20 +248,22 @@ public class EmployeServiceImpl implements IEmployeService {
 			return employeRepository.getAllEmployeByEntreprisec(entreprise);
 
 		} catch (Exception e) {
-			LOGGER.error("Erreur methode getAllEmployeByEntreprise =>" + " " + e.getMessage());
-			return null;
+			LOGGER.error("Erreur methode getAllEmployeByEntreprise {}", e.getMessage());
+			return new ArrayList<>();
 		}
 	}
 
 	public void mettreAjourEmailByEmployeIdJPQL(String email, int employeId) {
-		try {
-			LOGGER.info("{mettre A jour Email By EmployeId JPQL}");
-			Employe employeManagedEntity = employeRepository.findById(employeId).get();
 
+		LOGGER.info("{mettre A jour Email By EmployeId JPQL}");
+		Employe employeManagedEntity = employeRepository.findById(employeId).orElse(null);
+		if (employeManagedEntity != null) {
 			employeRepository.mettreAjourEmailByEmployeIdJPQL(email, employeManagedEntity.getId());
+			LOGGER.info("mettre A jour Email By EmployeId JPQL : Succes");
 
-		} catch (Exception e) {
-			LOGGER.error("Erreur methode mettreAjourEmailByEmployeIdJPQL =>");
+		} else {
+			LOGGER.error("Erreur methode mettreAjourEmailByEmployeIdJPQL :NullPointerException");
+
 		}
 
 	}
@@ -244,7 +275,7 @@ public class EmployeServiceImpl implements IEmployeService {
 			employeRepository.deleteAllContratJPQL();
 
 		} catch (Exception e) {
-			LOGGER.error("Erreur methode deleteAllContratJPQL =>" + " " + e.getMessage());
+			LOGGER.error("Erreur methode deleteAllContratJPQL {}", e.getMessage());
 		}
 
 	}
@@ -257,21 +288,21 @@ public class EmployeServiceImpl implements IEmployeService {
 
 		} catch (Exception e) {
 
-			LOGGER.error("Erreur methode getSalaireByEmployeIdJPQL =>" + " " + e.getMessage());
-			return (Float) null;
+			LOGGER.error("Erreur methode getSalaireByEmployeIdJPQL {}", e.getMessage());
+			return -1;
 		}
 	}
 
 	public Double getSalaireMoyenByDepartementId(int departementId) {
-		double i=0;
+		double i = 0;
 		try {
 			LOGGER.info("{get Salaire Moyen By DepartementId}");
 
-			i= employeRepository.getSalaireMoyenByDepartementId(departementId);
+			i = employeRepository.getSalaireMoyenByDepartementId(departementId);
 			return i;
 
 		} catch (Exception e) {
-			LOGGER.error("Erreur methode getSalaireMoyenByDepartementId =>" + " " + e.getMessage());
+			LOGGER.error("Erreur methode getSalaireMoyenByDepartementId {}", e.getMessage());
 			return i;
 		}
 	}
@@ -284,8 +315,8 @@ public class EmployeServiceImpl implements IEmployeService {
 			return timesheetRepository.getTimesheetsByMissionAndDate(employe, mission, dateDebut, dateFin);
 
 		} catch (Exception e) {
-			LOGGER.error("Erreur methode getTimesheetsByMissionAndDate =>" + " " + e.getMessage());
-			return null;
+			LOGGER.error("Erreur methode getTimesheetsByMissionAndDate {}", e.getMessage());
+			return  new ArrayList<>();
 		}
 	}
 
@@ -296,8 +327,8 @@ public class EmployeServiceImpl implements IEmployeService {
 			return (List<Employe>) employeRepository.findAll();
 
 		} catch (Exception e) {
-			LOGGER.error("Erreur methode getAllEmployes =>" + " " + e.getMessage());
-			return null;
+			LOGGER.error("Erreur methode getAllEmployes {}", e.getMessage());
+			return new ArrayList<>();
 		}
 	}
 

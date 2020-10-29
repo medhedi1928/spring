@@ -33,13 +33,11 @@ import tn.esprit.spring.repository.MissionRepository;
 import tn.esprit.spring.repository.TimesheetRepository;
 import tn.esprit.spring.services.EmployeServiceImpl;
 
-
 @RunWith(SpringRunner.class)
 @SpringBootTest
 /*
- * @SpringBootTest
- * Annotation qui peut être spécifiée sur une classe de test qui exécute des
- * tests basés sur Spring Boot.
+ * @SpringBootTest Annotation qui peut être spécifiée sur une classe de test qui
+ * exécute des tests basés sur Spring Boot.
  */
 public class EmployeServiceImplTest {
 
@@ -66,7 +64,6 @@ public class EmployeServiceImplTest {
 		int i = controller.ajouterEmploye(employe);
 
 		assertThat(i).isNotNegative();
-
 	}
 
 	@Test
@@ -74,9 +71,11 @@ public class EmployeServiceImplTest {
 		Employe employe = new Employe("Kawthar", "BEN KHOUDJA", "kawthaar.benkhoudja@esprit.tn", true,
 				Role.ADMINISTRATEUR);
 		controller.ajouterEmploye(employe);
-		controller.mettreAjourEmailByEmployeId("kawthaar.benkhoudja@gmail.com", employe.getId());
 
-		assertThat(employe.getEmail()).isNotSameAs("kawthaar.benkhoudja@gmail.com");
+		controller.mettreAjourEmailByEmployeId("kawthaar.benkhoudja@gmail.com", employe.getId());
+		Employe employe2 = employeRepository.findById(employe.getId()).orElse(null);
+
+		assertThat(employe.getEmail()).isNotSameAs(employe2.getEmail());
 	}
 
 	@Test
@@ -102,15 +101,21 @@ public class EmployeServiceImplTest {
 		deptRepoistory.save(departement);
 		controller.desaffecterEmployeDuDepartement(employe.getId(), departement.getId());
 
-	}
 
-	@Test
+
+}
+
+	@Test(expected = Test.None.class /* no exception expected */)
 	public void deleteEmployeByIdTest() {
 		Employe employe = new Employe("Supprimer", "Supprimer", "Supprimer.benkhoudja@esprit.tn", true,
 				Role.ADMINISTRATEUR);
 		controller.ajouterEmploye(employe);
+		Employe employeManagedEntity = null;
+		boolean b = employeRepository.findById(employe.getId()).isPresent();
+		if (b) {
+			employeManagedEntity = employeRepository.findById(employe.getId()).get();
 
-		Employe employeManagedEntity = employeRepository.findById(employe.getId()).get();
+		}
 		controller.deleteEmployeById(employeManagedEntity.getId());
 
 	}
@@ -132,7 +137,7 @@ public class EmployeServiceImplTest {
 
 	}
 
-	@Test
+	@Test(expected = Test.None.class /* no exception expected */)
 	public void affecterContratAEmployeTest() {
 		Contrat contrat = new Contrat(new Date(), "CDI", 1500);
 		contratRepoistory.save(contrat);
@@ -156,7 +161,7 @@ public class EmployeServiceImplTest {
 	@Test
 	public void getNombreEmployeJPQLTest() {
 		int i = controller.getNombreEmployeJPQL();
-		assertNotNull(i);
+		assertThat(i).isNotEqualTo(-1);
 
 	}
 
@@ -166,9 +171,7 @@ public class EmployeServiceImplTest {
 		controller.ajouterEmploye(employe);
 
 		java.util.List<String> names = controller.getAllEmployeNamesJPQL();
-		// for (String employe : names) {
-		// System.out.println(names);
-		// }
+
 		assertThat(names.size()).isPositive();
 
 	}
@@ -176,9 +179,7 @@ public class EmployeServiceImplTest {
 	@Test
 	public void getAllEmployesTest() {
 		java.util.List<Employe> employes = controller.getAllEmployes();
-		for (Employe employe : employes) {
 
-		}
 		assertThat(employes.size()).isPositive();
 
 	}
@@ -216,19 +217,20 @@ public class EmployeServiceImplTest {
 
 		double d = controller.getSalaireMoyenByDepartementId(departemen.getId());
 
-		assertNotNull(d);
+		assertThat(d).isPositive().isNotZero();
 	}
 
 	@Test
 	public void getSalaireByEmployeIdJPQLTest() {
 		Employe employe = new Employe("Imen", "SAHLI", "Imen.SAHLI@esprit.tn", true, Role.ADMINISTRATEUR);
 		controller.ajouterEmploye(employe);
+
 		Contrat contrat = new Contrat(new Date(), "CDI", 2000);
 		contrat.setEmploye(employe);
 		controller.ajouterContrat(contrat);
 		float salaire = controller.getSalaireByEmployeIdJPQL(employe.getId());
 
-		assertNotNull(salaire);
+		assertThat(salaire).isPositive().isGreaterThan(0);
 	}
 
 	@Test
@@ -278,9 +280,7 @@ public class EmployeServiceImplTest {
 
 		controller.getAllEmployeByEntreprise(entreprise);
 		java.util.List<Employe> Entreprise_employe = controller.getAllEmployeByEntreprise(entreprise);
-		for (Employe Eemploye : Entreprise_employe) {
 
-		}
 		assertThat(Entreprise_employe.size()).isPositive();
 
 	}
@@ -331,7 +331,7 @@ public class EmployeServiceImplTest {
 		java.util.List<Timesheet> timesheets_Res = controller.getTimesheetsByMissionAndDate(employe, mission,
 				new Date(), new Date(2020 - 12 - 27));
 
-		assertThat(timesheets_Res.size()).isGreaterThan(0);
+		assertThat(timesheets_Res.size()).isPositive();
 
 	}
 }
