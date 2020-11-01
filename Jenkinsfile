@@ -86,7 +86,7 @@ git branch: 'med', url: 'git@gitlab.com:Med_Hedi_Ben_khoudjha/spring-timesheet.g
     post { 
 
  success {  
-             mail bcc: '', body: "The pipelinez ${currentBuild.fullDisplayName} completed successfully.", cc: '', charset: 'UTF-8', from: '', mimeType: 'text/html', replyTo: '', subject: "Pipeline has succes: ${currentBuild.fullDisplayName}", to: "mohamedhedi.benkhoudja@esprit.tn";  
+             mail bcc: '', body: "The pipeline ${currentBuild.fullDisplayName} completed successfully.", cc: '', charset: 'UTF-8', from: '', mimeType: 'text/html', replyTo: '', subject: "Pipeline has succes: ${currentBuild.fullDisplayName}", to: "mohamedhedi.benkhoudja@esprit.tn";  
          }  
          failure {  
              mail bcc: '', body: "Error in ${env.BUILD_URL}", cc: '', charset: 'UTF-8', from: '', mimeType: 'text/html', replyTo: '', subject: "Pipeline has failed: ${currentBuild.fullDisplayName}", to: "mohamedhedi.benkhoudja@esprit.tn";  
