@@ -17,7 +17,6 @@ pipeline {
             steps {
                 script {
 git branch: 'med', url: 'git@gitlab.com:Med_Hedi_Ben_khoudjha/spring-timesheet.git'  
-bat "git checkout med"
 }
             }
         }
