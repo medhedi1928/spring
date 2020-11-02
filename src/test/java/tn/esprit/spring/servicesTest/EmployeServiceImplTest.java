@@ -105,7 +105,7 @@ public class EmployeServiceImplTest {
 
 }
 
-	@Test(expected = Test.None.class /* no exception expected */)
+	@Test
 	public void deleteEmployeByIdTest() {
 		Employe employe = new Employe("Supprimer", "Supprimer", "Supprimer.benkhoudja@esprit.tn", true,
 				Role.ADMINISTRATEUR);
