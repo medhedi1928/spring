@@ -15,6 +15,6 @@
 
 - Mohamed Hedi BEN KHOUDJA: **EmployeServiceImpl**
 - Nayrouz BOUZIDI:
-- Salma GOUIA: 
+- Salma GOUIA: **EntrepriseServiceImpl**
 - Asma ZARROUK:
 - Mounira SALHI: 
